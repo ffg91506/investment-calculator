@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Investment Analysis Calculator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-slide-in { animation: slideIn 0.3s ease-out; }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-slate-50 to-slate-100 min-h-screen">
+    <div id="app" class="p-4 md:p-6">
+        <div class="max-w-6xl mx-auto">
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                <div class="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-6">
+                    <div class="flex items-center gap-3">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                        </svg>
+                        <div>
+                            <h1 class="text-2xl font-bold">Investment Analysis Calculator</h1>
+                            <p class="text-blue-100 text-sm mt-1">Evaluate if your investment makes financial sense</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex border-b overflow-x-auto">
+                    <button onclick="switchTab('goals')" id="tab-goals" class="tab-button flex-1 min-w-fit px-4 md:px-6 py-4 font-medium transition-colors bg-blue-50 text-blue-700 border-b-2 border-blue-700">
+                        <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        Goals & Capital
+                    </button>
+                    <button onclick="switchTab('investment')" id="tab-investment" class="tab-button flex-1 min-w-fit px-4 md:px-6 py-4 font-medium transition-colors text-gray-600 hover:bg-gray-50">
+                        <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+                        </svg>
+                        Investment Details
+                    </button>
+                    <button onclick="switchTab('analysis')" id="tab-analysis" class="tab-button flex-1 min-w-fit px-4 md:px-6 py-4 font-medium transition-colors text-gray-600 hover:bg-gray-50">
+                        <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                        </svg>
+                        Analysis
+                    </button>
+                </div>
+
+                <div class="p-4 md:p-6">
+                    <div id="content-goals" class="tab-content">
+                        <div class="space-y-6">
+                            <div>
+                                <h2 class="text-xl font-semibold text-gray-800 mb-4">Financial Goals</h2>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Current Monthly Budget</label>
+                                        <input type="number" id="monthlyBudget" oninput="calculate()" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="0.00">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Desired Monthly Income from Investment</label>
+                                        <input type="number" id="desiredMonthlyIncome" oninput="calculate()" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="0.00">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <h2 class="text-xl font-semibold text-gray-800 mb-4">Available Capital</h2>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Cash Available</label>
+                                        <input type="number" id="cashAvailable" oninput="calculate()" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="0.00">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Other Liquid Assets</label>
+                                        <input type="number" id="otherAssets" oninput="calculate()" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="0.00">
+                                    </div>
+                                </div>
+                                <div class="mt-4 p-4 bg-blue-50 rounded-lg">
+                                    <div class="flex justify-between items-center">
+                                        <span class="font-semibold text-gray-700">Total Capital Available:</span>
+                                        <span id="totalCapital" class="text-2xl font-bold text-blue-700">$0.00</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="content-investment" class="tab-content hidden">
+                        <div class="space-y-6">
+                            <div>
+                                <h2 class="text-xl font-semibold text-gray-800 mb-4">Purchase Details</h2>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Total Purchase Price</label>
+                                        <input type="number" id="purchasePrice" oninput="calculate()" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="0.00">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Down Payment (Out of Pocket)</label>
+                                        <input type="number" id="downPayment" oninput="calculate()" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="0.00">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <h2 class="text-xl font-semibold text-gray-800 mb-4">Loan Details</h2>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Loan Amount</label>
+                                        <input type="number" id="loanAmount" oninput="calculate()" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Auto-calculated">
+                                        <p class="text-xs text-gray-500 mt-1">Auto-calculated if blank</p>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Interest Rate (%)</label>
+                                        <input type="number" id="loanInterestRate" oninput="calculate()" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="0.00" step="0.01">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Loan Term (Years)</label>
+                                        <input type="number" id="loanTermYears" oninput="calculate()" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="30">
+                                    </div>
+                                </div>
+                                <div class="mt-4 p-4 bg-green-50 rounded-lg">
+                                    <div class="flex justify-between items-center">
+                                        <span class="font-semibold text-gray-700">Monthly Loan Payment:</span>
+                                        <span id="monthlyLoanPayment" class="text-xl font-bold text-green-700">$0.00</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <h2 class="text-xl font-semibold text-gray-800 mb-4">Monthly Expenses</h2>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Operational Expenses</label>
+                                        <input type="number" id="operationalExpenses" oninput="calculate()" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="0.00">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Monthly Commissions/Fees</label>
+                                        <input type="number" id="commissionsAndFees" oninput="calculate()" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="0.00">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Property Taxes (Monthly)</label>
+                                        <input type="number" id="propertyTaxes" oninput="calculate()" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="0.00">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Insurance (Monthly)</label>
+                                        <input type="number" id="insurance" oninput="calculate()" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="0.00">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Other Monthly Expenses</label>
+                                        <input type="number" id="otherMonthlyExpenses" oninput="calculate()" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="0.00">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <h2 class="text-xl font-semibold text-gray-800 mb-4">Expected Income</h2>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Promised Monthly Income</label>
+                                    <input type="number" id="promisedMonthlyIncome" oninput="calculate()" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="0.00">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="content-analysis" class="tab-content hidden">
+                        <div class="space-y-6 animate-slide-in">
+                            <div id="decisionBox" class="p-6 rounded-xl bg-gray-50 border-2 border-gray-300">
+                                <div class="flex items-center gap-3 mb-4">
+                                    <svg id="decisionIcon" class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                    </svg>
+                                    <h2 id="decisionTitle" class="text-2xl font-bold text-gray-800">Investment Analysis</h2>
+                                </div>
+                                <p id="decisionText" class="text-gray-700">Enter your investment details to see the analysis.</p>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div class="bg-white border-2 border-gray-200 rounded-lg p-6">
+                                    <h3 class="font-semibold text-gray-700 mb-4">Financial Summary</h3>
+                                    <div class="space-y-3">
+                                        <div class="flex justify-between pb-2 border-b">
+                                            <span class="text-gray-600">Total Upfront Cost:</span>
+                                            <span id="totalUpfront" class="font-semibold">$0.00</span>
+                                        </div>
+                                        <div class="flex justify-between pb-2 border-b">
+                                            <span class="text-gray-600">Capital Available:</span>
+                                            <span id="capitalAvail" class="font-semibold">$0.00</span>
+                                        </div>
+                                        <div class="flex justify-between pb-2 border-b">
+                                            <span class="text-gray-600">Remaining Capital:</span>
+                                            <span id="remainingCapital" class="font-semibold">$0.00</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="bg-white border-2 border-gray-200 rounded-lg p-6">
+                                    <h3 class="font-semibold text-gray-700 mb-4">Monthly Cash Flow</h3>
+                                    <div class="space-y-3">
+                                        <div class="flex justify-between pb-2 border-b">
+                                            <span class="text-gray-600">Monthly Income:</span>
+                                            <span id="monthlyIncome" class="font-semibold text-green-600">$0.00</span>
+                                        </div>
+                                        <div class="flex justify-between pb-2 border-b">
+                                            <span class="text-gray-600">Monthly Expenses:</span>
+                                            <span id="monthlyExpenses" class="font-semibold text-red-600">-$0.00</span>
+                                        </div>
+                                        <div class="flex justify-between pb-2 border-b">
+                                            <span class="text-gray-600">Net Monthly Income:</span>
+                                            <span id="netMonthlyIncome" class="font-semibold text-lg">$0.00</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="bg-white border-2 border-gray-200 rounded-lg p-6">
+                                    <h3 class="font-semibold text-gray-700 mb-4">Income Requirements</h3>
+                                    <div class="space-y-3">
+                                        <div class="flex justify-between pb-2 border-b">
+                                            <span class="text-gray-600">Breakeven Income:</span>
+                                            <span id="breakevenIncome" class="font-semibold">$0.00</span>
+                                        </div>
+                                        <div class="flex justify-between pb-2 border-b">
+                                            <span class="text-gray-600">Desired Income:</span>
+                                            <span id="desiredIncome" class="font-semibold">$0.00</span>
+                                        </div>
+                                        <div class="flex justify-between pb-2 border-b">
+                                            <span class="text-gray-600">Total Required Income:</span>
+                                            <span id="totalRequired" class="font-semibold text-lg">$0.00</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="bg-white border-2 border-gray-200 rounded-lg p-6">
+                                    <h3 class="font-semibold text-gray-700 mb-4">Return Metrics</h3>
+                                    <div class="space-y-3">
+                                        <div class="flex justify-between pb-2 border-b">
+                                            <span class="text-gray-600">Annual Net Income:</span>
+                                            <span id="annualNet" class="font-semibold">$0.00</span>
+                                        </div>
+                                        <div class="flex justify-between pb-2 border-b">
+                                            <span class="text-gray-600">Cash-on-Cash Return:</span>
+                                            <span id="cashReturn" class="font-semibold text-lg">0.00%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-blue-50 border-2 border-blue-200 rounded-lg p-6">
+                                <h3 class="font-semibold text-blue-900 mb-3">Decision Factors</h3>
+                                <ul id="decisionFactors" class="space-y-2"></ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-6 text-center text-sm text-gray-600">
+                <p>Investment Analysis Calculator - Make informed investment decisions</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function getValue(id) {
+            return parseFloat(document.getElementById(id).value) || 0;
+        }
+
+        function formatCurrency(value) {
+            return new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD',
+                minimumFractionDigits: 2
+            }).format(value);
+        }
+
+        function calculateMonthlyPayment(principal, rate, years) {
+            if (principal === 0 || rate === 0 || years === 0) return 0;
+            const r = rate / 100 / 12;
+            const n = years * 12;
+            return principal * (r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.className = 'tab-button flex-1 min-w-fit px-4 md:px-6 py-4 font-medium transition-colors text-gray-600 hover:bg-gray-50';
+            });
+            document.getElementById('tab-' + tab).className = 'tab-button flex-1 min-w-fit px-4 md:px-6 py-4 font-medium transition-colors bg-blue-50 text-blue-700 border-b-2 border-blue-700';
+            
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.add('hidden');
+            });
+            document.getElementById('content-' + tab).classList.remove('hidden');
+            
+            if (tab === 'analysis') calculate();
+        }
+
+        function calculate() {
+            const cashAvailable = getValue('cashAvailable');
+            const otherAssets = getValue('otherAssets');
+            const desiredMonthlyIncome = getValue('desiredMonthlyIncome');
+            const purchasePrice = getValue('purchasePrice');
+            const downPayment = getValue('downPayment');
+            const loanAmount = getValue('loanAmount');
+            const loanInterestRate = getValue('loanInterestRate');
+            const loanTermYears = getValue('loanTermYears');
+            const operationalExpenses = getValue('operationalExpenses');
+            const commissionsAndFees = getValue('commissionsAndFees');
+            const propertyTaxes = getValue('propertyTaxes');
+            const insurance = getValue('insurance');
+            const otherMonthlyExpenses = getValue('otherMonthlyExpenses');
+            const promisedMonthlyIncome = getValue('promisedMonthlyIncome');
+
+            const totalCapital = cashAvailable + otherAssets;
+            const calculatedLoan = purchasePrice - downPayment;
+            const finalLoanAmount = loanAmount || calculatedLoan;
+            const monthlyLoanPayment = calculateMonthlyPayment(finalLoanAmount, loanInterestRate, loanTermYears);
+            const totalMonthlyExpenses = monthlyLoanPayment + operationalExpenses + commissionsAndFees + propertyTaxes + insurance + otherMonthlyExpenses;
+            const totalUpfrontCost = downPayment + commissionsAndFees;
+            const monthlyNetIncome = promisedMonthlyIncome - totalMonthlyExpenses;
+            const breakevenIncome = totalMonthlyExpenses;
+            const minimumRequired = breakevenIncome + desiredMonthlyIncome;
+            const annualNet = monthlyNetIncome * 12;
+            const cashOnCashReturn = totalUpfrontCost > 0 ? (annualNet / totalUpfrontCost * 100) : 0;
+            const remainingCapital = totalCapital - totalUpfrontCost;
+
+            document.getElementById('totalCapital').textContent = formatCurrency(totalCapital);
+            document.getElementById('monthlyLoanPayment').textContent = formatCurrency(monthlyLoanPayment);
+            document.getElementById('totalUpfront').textContent = formatCurrency(totalUpfrontCost);
+            document.getElementById('capitalAvail').textContent = formatCurrency(totalCapital);
+            document.getElementById('remainingCapital').textContent = formatCurrency(remainingCapital);
+            document.getElementById('remainingCapital').className = remainingCapital >= 0 ? 'font-semibold text-green-600' : 'font-semibold text-red-600';
+            document.getElementById('monthlyIncome').textContent = formatCurrency(promisedMonthlyIncome);
+            document.getElementById('monthlyExpenses').textContent = '-' + formatCurrency(totalMonthlyExpenses);
+            document.getElementById('netMonthlyIncome').textContent = formatCurrency(monthlyNetIncome);
+            document.getElementById('netMonthlyIncome').className = monthlyNetIncome >= 0 ? 'font-semibold text-lg text-green-600' : 'font-semibold text-lg text-red-600';
+            document.getElementById('breakevenIncome').textContent = formatCurrency(breakevenIncome);
+            document.getElementById('desiredIncome').textContent = formatCurrency(desiredMonthlyIncome);
+            document.getElementById('totalRequired').textContent = formatCurrency(minimumRequired);
+            document.getElementById('annualNet').textContent = formatCurrency(annualNet);
+            document.getElementById('cashReturn').textContent = cashOnCashReturn.toFixed(2) + '%';
+            document.getElementById('cashReturn').className = cashOnCashReturn >= 0 ? 'font-semibold text-lg text-green-600' : 'font-semibold text-lg text-red-600';
+
+            const isWorthIt = monthlyNetIncome >= desiredMonthlyIncome && totalUpfrontCost <= totalCapital;
+            const decisionBox = document.getElementById('decisionBox');
+            const decisionIcon = document.getElementById('decisionIcon');
+            const decisionTitle = document.getElementById('decisionTitle');
+            const decisionText = document.getElementById('decisionText');
+
+            if (isWorthIt) {
+                decisionBox.className = 'p-6 rounded-xl bg-green-50 border-2 border-green-500';
+                decisionIcon.className = 'w-8 h-8 text-green-600';
+                decisionIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>';
+                decisionTitle.textContent = 'Investment Looks Viable!';
+                decisionText.textContent = 'Based on your inputs, this investment meets your income goals and you have sufficient capital available.';
+            } else {
+                decisionBox.className = 'p-6 rounded-xl bg-red-50 border-2 border-red-500';
+                decisionIcon.className = 'w-8 h-8 text-red-600';
+                decisionIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>';
+                decisionTitle.textContent = 'Investment May Not Meet Goals';
+                decisionText.textContent = 'This investment may not meet your financial goals or you may not have enough capital available.';
+            }
+
+            const meetsIncome = monthlyNetIncome >= desiredMonthlyIncome;
+            const hasCapital = totalUpfrontCost <= totalCapital;
+            const goodReturn = cashOnCashReturn > 8;
+
+            document.getElementById('decisionFactors').innerHTML = `
+                <li class="flex items-start gap-2">
+                    <span class="${meetsIncome ? 'text-green-600' : 'text-red-600'}">${meetsIncome ? '✓' : '✗'}</span>
+                    <span class="text-gray-700">Net income ${meetsIncome ? 'meets' : 'falls short of'} your desired monthly income goal</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <span class="${hasCapital ? 'text-green-600' : 'text-red-600'}">${hasCapital ? '✓' : '✗'}</span>
+                    <span class="text-gray-700">You ${hasCapital ? 'have sufficient' : 'need more'} capital for this investment</span>
+                </li>
+                <li class="flex items-start gap-2">
+                    <span class="${goodReturn ? 'text-green-600' : cashOnCashReturn > 0 ? 'text-yellow-600' : 'text-red-600'}">${goodReturn ? '✓' : cashOnCashReturn > 0 ? '~' : '✗'}</span>
+                    <span class="text-gray-700">Cash-on-cash return is ${goodReturn ? 'strong' : cashOnCashReturn > 0 ? 'moderate' : 'negative'} (${cashOnCashReturn.toFixed(2)}%)</span>
+                </li>
+            `;
+        }
+
+        calculate();
+    </script>
+</body>
+</html>
